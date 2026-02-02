@@ -41,10 +41,14 @@ jobs:
    steps:
      - name: Checkout code
       uses: actions/checkout@v4
+      
      - name: Gitleaks setup
       uses: gitleaks/gitleaks-action@v2
+      
      - name: Gitleaks scan
      run: |
        gitleaks detect --source ./client  --exit-code 1
        gitleaks detect --source ./api --exit-code 1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
