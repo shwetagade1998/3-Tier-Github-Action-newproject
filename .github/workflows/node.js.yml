@@ -36,7 +36,7 @@ jobs:
 
 gitleaks-scan:
    runs-on: ubuntu-latest
-  needs: compile
+   needs: compile
 
   steps:
     - name: Checkout code
@@ -49,8 +49,8 @@ gitleaks-scan:
 
     - name: Gitleaks scan
       run: |
-        gitleaks detect --source ./client --exit-code 1
-        gitleaks detect --source ./api --exit-code 1
+        gitleaks detect --source . --exit-code 1
+      
 
 
     
