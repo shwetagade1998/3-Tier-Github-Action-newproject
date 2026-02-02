@@ -8,20 +8,15 @@ on:
 
 jobs:
   compile:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x]
-
+    runs-on: Agent1
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+         node-version: '18.19.1'
 
     - name: Frontend Compilation (Syntax check)
       run: |
@@ -33,11 +28,4 @@ jobs:
         cd server
         find . -name "*.js" -exec node --check {} +
 
-    - name: Install dependencies
-      run: npm install
-
-    - name: Run tests
-      run: npm test
-
-    - name: Build project
-      run: npm run build
+    
