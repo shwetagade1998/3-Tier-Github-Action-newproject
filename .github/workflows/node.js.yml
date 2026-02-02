@@ -8,7 +8,8 @@ on:
 
 jobs:
   compile:
-    runs-on: Agent1
+    runs-on: ubuntu-latest
+
 
     steps:
     - name: Checkout code
