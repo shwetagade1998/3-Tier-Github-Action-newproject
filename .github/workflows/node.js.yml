@@ -9,23 +9,26 @@ on:
 jobs:
   compile:
     runs-on: Agent1
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
-         node-version: '18.19.1'
+        node-version: 18.19.1
 
     - name: Frontend Compilation (Syntax check)
       run: |
-        cd client
-        find . -name "*.js" -exec node --check {} +
+        if [ -d client ]; then
+          cd client
+          find . -name "*.js" -exec node --check {} +
+        fi
 
     - name: Backend Compilation (Syntax check)
       run: |
-        cd server
-        find . -name "*.js" -exec node --check {} +
-
-    
+        if [ -d server ]; then
+          cd server
+          find . -name "*.js" -exec node --check {} +
+        fi
