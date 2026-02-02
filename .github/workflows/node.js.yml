@@ -1,6 +1,3 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
 name: Node.js CICD
 
 on:
@@ -10,26 +7,37 @@ on:
     branches: [ "main" ]
 
 jobs:
- compile:
-   runs-on: Agent1
+  compile:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
 
-   steps:
-   - name: Checkout code
-     uses: actions/checkout@v4
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-   - name: Set up Node.js
-     uses: actions/setup-node@v4
-     with:
-       node version: '18.19.1'
-   - name: Frondtend Compilation  (Syntax check)
-     run: |
-       cd client
-       find . -name "* .js" -exec node  --check {} +
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
 
-   - name: Backend compilation (Syntax check)
-     run: |
-       cd client
-       find . -name "* .js" -exec node  --check {} +
-     
- 
-  
+    - name: Frontend Compilation (Syntax check)
+      run: |
+        cd client
+        find . -name "*.js" -exec node --check {} +
+
+    - name: Backend Compilation (Syntax check)
+      run: |
+        cd server
+        find . -name "*.js" -exec node --check {} +
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run tests
+      run: npm test
+
+    - name: Build project
+      run: npm run build
