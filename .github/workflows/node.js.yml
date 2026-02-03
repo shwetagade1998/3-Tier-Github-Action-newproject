@@ -38,18 +38,16 @@ gitleaks-scan:
    runs-on: ubuntu-latest
    needs: compile
 
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+   steps:
+     - name: Checkout code
+       uses: actions/checkout@v4
+      
+     - name: Gitleaks setup
+       uses: gitleaks/gitleaks-action@v2
+      
+     env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Install Gitleaks
-      run: |
-        curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64.tar.gz | tar -xz
-        sudo mv gitleaks /usr/local/bin/gitleaks
-
-    - name: Gitleaks scan
-      run: |
-        gitleaks detect --source . --exit-code 1
       
 
 
