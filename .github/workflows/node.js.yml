@@ -9,7 +9,6 @@ on:
 jobs:
   compile:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -17,16 +16,16 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18.19.1
+          node-version: 18
 
-      - name: Frontend Compilation (Syntax check)
+      - name: Frontend Compilation
         run: |
           if [ -d client ]; then
             cd client
             find . -name "*.js" -exec node --check {} +
           fi
 
-      - name: Backend Compilation (Syntax check)
+      - name: Backend Compilation
         run: |
           if [ -d server ]; then
             cd server
@@ -36,29 +35,26 @@ jobs:
   gitleaks-scan:
     runs-on: ubuntu-latest
     needs: compile
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run Gitleaks scan
+      - name: Run Gitleaks
         uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
- trivy_fs_scan:
-  runs-on: ubuntu-latest
-  needs: gitleaks-scan
-  
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@0.28.0
-      with:
-        scan-type: 'fs'
-        scan-ref: '.'
-        format: 'table'
-        ignore-unfixed: true
-        vuln-type: 'os,library'
-        severity: 'CRITICAL,HIGH'
+  trivy_fs_scan:
+    runs-on: ubuntu-latest
+    needs: gitleaks-scan
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'table'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
