@@ -66,16 +66,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: SonarCloud Scan (client)
-        uses: sonarsource/sonarcloud-github-action@master
+      - name: SonarCloud Scan (Frontend)
+        uses: SonarSource/sonarqube-scan-action@v5.0.0
         with:
           projectBaseDir: client
-          args: >
-            -Dsonar.projectKey=myorg_client
-            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-            -Dsonar.projectName=myorg_client
-            -Dsonar.sources=.
-            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**
+          args: "-Dsonar.projectKey=myorg_client -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} -Dsonar.projectName=myorg_client -Dsonar.sources=. -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**"
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
@@ -86,13 +81,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: SonarCloud Scan (api)
-        uses: sonarsource/sonarcloud-github-action@master
+      - name: SonarCloud Scan (Backend)
+        uses: SonarSource/sonarqube-scan-action@v5.0.0
         with:
-          projectBaseDir: api
-          args: >
-            -Dsonar.projectKey=myorg_api
-            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-            -Dsonar.sources=.
+          projectBaseDir: server
+          args: "-Dsonar.projectKey=myorg_api -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} -Dsonar.projectName=myorg_api -Dsonar.sources=."
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
