@@ -59,32 +59,21 @@ jobs:
           vuln-type: os,library
           severity: CRITICAL,HIGH
 
-  sonar-frontend:
+  sonarcloud-scan:
     runs-on: ubuntu-latest
     needs: trivy-fs-scan
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: SonarCloud Scan (Frontend)
-        uses: SonarSource/sonarqube-scan-action@v5.0.0
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v5
         with:
-          projectBaseDir: client
-          args: "-Dsonar.projectKey=myorg_client -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} -Dsonar.projectName=myorg_client -Dsonar.sources=. -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**"
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-  sonar-backend:
-    runs-on: ubuntu-latest
-    needs: sonar-frontend
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: SonarCloud Scan (Backend)
-        uses: SonarSource/sonarqube-scan-action@v5.0.0
-        with:
-          projectBaseDir: server
-          args: "-Dsonar.projectKey=myorg_api -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} -Dsonar.projectName=myorg_api -Dsonar.sources=."
+          projectBaseDir: .
+          args: >
+            -Dsonar.projectKey=myorg_3-tier-github-action-newproject
+            -Dsonar.organization=myorg
+            -Dsonar.sources=client,server
+            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
